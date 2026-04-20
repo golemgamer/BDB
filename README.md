@@ -17,7 +17,7 @@ Tambien mejora 3 cosas clave:
 
 ## Instalacion
 
-1. Copia la carpeta [addons/bdb](/C:/Users/gerso/Documents/bdb/addons/bdb) o instala desde la tienda de godot.
+1. Copia la carpeta [addons/bdb](/addons/bdb) o instala desde la tienda de godot.
 2. Activa el plugin desde `Project > Project Settings > Plugins`.
 3. Usa el autoload `BDB` que el plugin registra automaticamente.
 
@@ -81,7 +81,7 @@ La copia en `res://` solo puede crearse desde el editor. En un juego exportado, 
 
 ## Documentacion completa
 
-La guia detallada esta en [docs/BDB_DOCUMENTATION.md](/C:/Users/gerso/Documents/bdb/docs/BDB_DOCUMENTATION.md).
+La guia detallada esta en [docs/BDB_DOCUMENTATION.md](docs/BDB_DOCUMENTATION.md).
 
 Incluye:
 
