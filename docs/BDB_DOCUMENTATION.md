@@ -17,20 +17,8 @@ Sirve tanto para:
 - proyectos que apenas empiezan y quieren algo rapido
 - proyectos grandes o ya avanzados que necesitan ordenar persistencia sin meter una solucion demasiado pesada
 
-## 2. Problemas que tenia el addon original
 
-El addon original era util como base, pero tenia varios puntos debiles:
-
-- guardaba en texto separado por comas y `;`, lo que era fragil
-- si el valor contenia comas o formatos complejos, el archivo podia romperse
-- estaba demasiado centrado en listas de nombres de variables
-- no tenia una forma clara de devolver todos los datos de una sola vez
-- la carga por contexto era poco obvia
-- no tenia una documentacion suficiente para proyectos reales
-
-## 3. Objetivos de esta mejora
-
-La nueva version intenta alinearse con lo que pediste:
+## 2. Objetivos
 
 - usar `CREATE`, `SAVE`, `LOAD` y `DELETE` como comandos principales
 - poder guardar variables normales creadas con `var`
@@ -39,7 +27,7 @@ La nueva version intenta alinearse con lo que pediste:
 - seguir siendo simple para proyectos chicos
 - seguir siendo util para proyectos ya terminados o en produccion
 
-## 4. Como funciona internamente
+## 3. Como funciona internamente
 
 Cada archivo `.bdb` guarda un bloque de datos con:
 
@@ -47,11 +35,11 @@ Cada archivo `.bdb` guarda un bloque de datos con:
 - `order`: orden de guardado para cargas posicionales
 - metadata minima de version y timestamps
 
-El formato ya no usa separadores manuales. Ahora guarda una estructura completa de Godot, mucho mas estable para `Dictionary`, `Array`, `String`, `bool`, `int`, `float`, vectores, colores y otros `Variant` serializables.
+no separadores manuales. Ahora guarda una estructura completa de Godot, mucho mas estable para `Dictionary`, `Array`, `String`, `bool`, `int`, `float`, vectores, colores y otros `Variant` serializables.
 
-## 5. Rutas que usa BDB
+## 4. Rutas que usa BDB
 
-### 5.1 Archivo local del usuario
+### 4.1 Archivo local del usuario
 
 Todos los datos jugables o modificables se guardan en:
 
@@ -66,7 +54,7 @@ user://settings.bdb
 user://player/profile.bdb
 ```
 
-### 5.2 Archivo incluido en el proyecto
+### 4.2 Archivo incluido en el proyecto
 
 Si usas `CREATE(..., true)`, BDB puede crear una copia base en:
 
@@ -82,9 +70,9 @@ Importante:
 - en una exportacion final, `res://` es solo lectura
 - el archivo del jugador siempre debe vivir en `user://`
 
-## 6. API principal
+## 5. API principal
 
-## 6.1 `BDB.CREATE(file_name, defaults = {}, create_bundle_copy = false)`
+## 5.1 `BDB.CREATE(file_name, defaults = {}, create_bundle_copy = false)`
 
 Crea el archivo por primera vez si no existe.
 
@@ -122,7 +110,7 @@ var settings = BDB.CREATE("settings", {
 
 `CREATE` no esta pensado para destruir o rehacer la base cada vez. Si el archivo ya existe, lo respeta.
 
-## 6.2 `BDB.SAVE(file_name, data_or_context, fields_or_order = [], order = [])`
+## 5.2 `BDB.SAVE(file_name, data_or_context, fields_or_order = [], order = [])`
 
 Guarda datos en el archivo `.bdb`.
 
@@ -187,7 +175,7 @@ Eso permite mantener posiciones si quieres una logica basada en orden.
 - no le pases objetos temporales que no sean serializables
 - no esperes que borre campos antiguos: para eso usa `DELETE`
 
-## 6.3 `BDB.LOAD(file_name, request_or_target = null, defaults = {})`
+## 5.3 `BDB.LOAD(file_name, request_or_target = null, defaults = {})`
 
 Carga datos desde el archivo `.bdb`.
 
@@ -282,7 +270,7 @@ Los defaults se usan cuando:
 - no esperes que cree automaticamente una plantilla base en `res://`; para eso usa `CREATE`
 - no uses orden si realmente dependes de nombres claros; cuando puedas, usa nombres
 
-## 6.4 `BDB.DELETE(file_name, target = null)`
+## 5.4 `BDB.DELETE(file_name, target = null)`
 
 Borra el archivo completo o una o varias claves.
 
@@ -310,7 +298,7 @@ BDB.DELETE("settings", ["music_volume", "fullscreen"])
 
 No esta pensado para administrar archivos del plugin ni para editar directamente `res://bdb/` durante el juego exportado.
 
-## 7. Orden de guardado y carga
+## 6. Orden de guardado y carga
 
 Tu idea de trabajar por orden es valida y ahora queda cubierta de una manera mas limpia.
 
@@ -328,9 +316,9 @@ Si puedes trabajar por nombres, hazlo.
 
 Usa orden solo cuando realmente tu flujo depende de posiciones fijas.
 
-## 8. Compatibilidad con proyectos nuevos y viejos
+## 7. Compatibilidad con proyectos nuevos y viejos
 
-## 8.1 Proyectos nuevos
+## 7.1 Proyectos nuevos
 
 BDB funciona bien para arrancar rapido:
 
@@ -341,7 +329,7 @@ BDB funciona bien para arrancar rapido:
 
 Es suficiente para settings, perfiles, progreso o datos de gameplay simple.
 
-## 8.2 Proyectos existentes o grandes
+## 7.2 Proyectos existentes o grandes
 
 Tambien es util si ya tienes muchas variables repartidas por scripts:
 
@@ -352,7 +340,7 @@ Tambien es util si ya tienes muchas variables repartidas por scripts:
 
 Eso permite ordenar persistencia sin reescribir todo el proyecto de golpe.
 
-## 9. Compatibilidad con la API vieja
+## 8. Compatibilidad con la API vieja
 
 Se mantiene una compatibilidad basica con:
 
@@ -368,7 +356,7 @@ Nota importante:
 - si un archivo antiguo tenia casos ambiguos con comas dentro de strings complejos, la recuperacion es de mejor esfuerzo
 - una vez que vuelvas a guardar con esta nueva version, el archivo queda estabilizado en el formato nuevo
 
-## 10. Tipos de datos recomendados
+## 9. Tipos de datos recomendados
 
 BDB esta pensado para `Variant` serializables de Godot.
 
@@ -385,7 +373,7 @@ Ejemplos recomendados:
 - `Color`
 - combinaciones anidadas de los anteriores
 
-## 11. Cosas que no conviene guardar
+## 10. Cosas que no conviene guardar
 
 No es buena idea guardar esto directamente:
 
@@ -403,9 +391,9 @@ Si necesitas persistir esos casos, guarda una representacion simple:
 - indices
 - diccionarios planos
 
-## 12. Ejemplos completos
+## 11. Ejemplos completos
 
-## 12.1 Ajustes del juego
+## 11.1 Ajustes del juego
 
 ```gdscript
 func _ready():
@@ -429,7 +417,7 @@ func save_settings(language: String, music_volume: float, sfx_volume: float, ful
 	})
 ```
 
-## 12.2 Datos del jugador
+## 11.2 Datos del jugador
 
 ```gdscript
 extends Node
@@ -453,7 +441,7 @@ func load_player() -> void:
 	})
 ```
 
-## 12.3 Carga por orden
+## 11.3 Carga por orden
 
 ```gdscript
 BDB.SAVE("ordered_example", {
@@ -465,9 +453,9 @@ var values = BDB.LOAD("ordered_example", [])
 # Resultado: [null, "Maria", null, 1000]
 ```
 
-## 13. Errores comunes
+## 12. Errores comunes
 
-## 13.1 Llamar `CREATE` todo el tiempo
+## 12.1 Llamar `CREATE` todo el tiempo
 
 Incorrecto:
 
@@ -483,7 +471,7 @@ func _ready():
 	BDB.CREATE("settings")
 ```
 
-## 13.2 Usar `SAVE` para borrar
+## 12.2 Usar `SAVE` para borrar
 
 Incorrecto:
 
@@ -501,7 +489,7 @@ Correcto:
 BDB.DELETE("settings", "fullscreen")
 ```
 
-## 13.3 Esperar que `res://` sea editable en export
+## 12.3 Esperar que `res://` sea editable en export
 
 Incorrecto:
 
@@ -512,13 +500,13 @@ Correcto:
 - usar `user://` para datos del jugador
 - usar `res://bdb/` solo como plantilla creada desde el editor
 
-## 13.4 Mezclar orden con nombres sin saber cual manda
+## 12.4 Mezclar orden con nombres sin saber cual manda
 
 Si guardas con orden explicito, ese orden pasa a ser la referencia para las cargas posicionales.
 
 Si no necesitas posiciones, evita ese modo y usa nombres.
 
-## 14. Flujo recomendado
+## 13. Flujo recomendado
 
 Para la mayoria de proyectos:
 
@@ -527,7 +515,7 @@ Para la mayoria de proyectos:
 3. `SAVE` cuando cambie algo importante.
 4. `DELETE` solo cuando quieras limpiar una clave o reiniciar un archivo.
 
-## 15. Resumen corto
+## 14. Resumen corto
 
 Si quieres la version mas simple posible, piensa BDB asi:
 
