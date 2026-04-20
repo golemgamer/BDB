@@ -2,7 +2,7 @@
 
 BDB es un addon para Godot pensado para guardar datos en archivos `.bdb` de forma simple, directa y reutilizable. Cada archivo funciona como una pequeña base de datos independiente para cosas como ajustes, progreso, sesiones, datos del jugador, dificultad, niveles o cualquier otra estructura de datos basada en `Variant`.
 
-Esta version reorganiza el addon alrededor de 4 comandos principales:
+Esta version reorganiza el addon alrededor de 4 comandos principales (VERSION 2.0):
 
 - `BDB.CREATE()`
 - `BDB.SAVE()`
